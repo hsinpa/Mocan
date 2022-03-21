@@ -22,6 +22,10 @@ module.exports = {
         args : "--project tsconfig.json"
       }
     ],
+    ["snowpack-plugin-raw-file-loader", 
+    {
+      exts: [".frag", ".vert", ".txt"]
+    }],
   ],
   devOptions: {
     port : 8080,

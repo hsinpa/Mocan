@@ -1,4 +1,4 @@
-import './stylesheet/main.scss';
+import {} from './'; // txt === '/src/words.txt'
 
 window.onload = () => {
     
