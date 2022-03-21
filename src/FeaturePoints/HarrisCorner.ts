@@ -18,7 +18,4 @@ export default class HarrisCorner {
         this._window_size = window_size;
         this._threshold = threshold;
     }
-
-
-
 }
