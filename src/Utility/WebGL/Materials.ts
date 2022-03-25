@@ -1,12 +1,15 @@
-import {GLSLDataSet, MaterialList} from './WebglType';
+import {GLSLDataSet, MaterialDataSet, MaterialList} from './WebglType';
 import {Dictionary} from 'typescript-collections';
 
 export default class Materials {
-    _materialCache : Dictionary<string, GLSLDataSet>;
+    _materialCache : Dictionary<string, MaterialDataSet>;
 
-    constructor(config: MaterialList) {
+    constructor() {
         this._materialCache = new Dictionary();
-        this.fetech_all_shaders(config.materials);
+    }
+
+    public async AsyncSetUp(config: MaterialList) {
+        await this.fetech_all_shaders(config.materials);
     }
 
     public get_shader(name : string) {
@@ -23,23 +26,25 @@ export default class Materials {
                 [responses[0].text(), responses[1].text()]
             )
         ).then((values) => {
-            let gLSLDataSet : GLSLDataSet = {
+            let gLSLDataSet : MaterialDataSet = {
                 name : name,
-                vertex_shader : values[0],
-                fragment_shader : values[1],
+                glsl : {
+                    vertex_shader : values[0],
+                    fragment_shader : values[1],    
+                }
             };
             
             return gLSLDataSet; 
         });
     }
 
-    private async fetech_all_shaders(materials : GLSLDataSet[]) {
+    private async fetech_all_shaders(materials : MaterialDataSet[]) {
         if (materials == null) return;
 
         let promiseArray = [];
 
         for (let i = 0; i < materials.length; i++) {
-            promiseArray.push(this.fetch_shaders(materials[i].name, materials[i].vertex_shader, materials[i].fragment_shader));
+            promiseArray.push(this.fetch_shaders(materials[i].name, materials[i].glsl.vertex_shader, materials[i].glsl.fragment_shader));
         }
 
         let loadedMaterial = await Promise.all(promiseArray).then(responses => responses);

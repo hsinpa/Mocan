@@ -7,41 +7,9 @@ import {PlaneVertex} from '../UniversalType';
 class WebglUtility {
 
     textureCache : Dictionary<string, HTMLImageElement>;
-    shaderCache : Dictionary<string, string>;
 
     constructor() {
         this.textureCache = new Dictionary();
-        this.shaderCache = new Dictionary();
-    }
-
-    async PrepareREGLShader(vertFilePath: string, fragFilePath: string) {
-        //If cache
-        if (this.shaderCache.containsKey(vertFilePath) && this.shaderCache.containsKey(fragFilePath)) {
-            return {
-                vertex_shader : this.shaderCache.getValue(vertFilePath),
-                fragment_shader : this.shaderCache.getValue(fragFilePath),
-            };
-        }
-
-        let VertPros = fetch(vertFilePath, {method: 'GET', credentials: 'include'});
-        let FragPros = fetch(fragFilePath, {method: 'GET', credentials: 'include'});
-    
-        return Promise.all([VertPros, FragPros ])
-        .then( responses =>
-            Promise.all(
-                [responses[0].text(), responses[1].text()]
-            )
-        ).then((values) => {
-            let gLSLDataSet : GLSLDataSet = {
-                vertex_shader : values[0],
-                fragment_shader : values[1],
-            };
-
-            this.shaderCache.setValue(vertFilePath, values[0]);
-            this.shaderCache.setValue(fragFilePath, values[1]);
-
-            return gLSLDataSet; 
-        });
     }
 
     GetPlaneVertex() : PlaneVertex {
