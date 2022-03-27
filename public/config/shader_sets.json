@@ -1,17 +1,17 @@
 {
     "materials" : [
         {
-            "name" : "GrayScaleGuassianBlur",
+            "name" : "GaussianBlur",
             "glsl" : {
                 "vertex_shader": "./shaders/vertex/basic_texture.vert",
-                "fragment_shader" : "./shaders/vertex/guassian_blur.frag"    
+                "fragment_shader" : "./shaders/fragment/gaussian_blur.frag"    
             }
         },
         {
             "name" : "SobelEdgeDetection",
             "glsl" : {
                 "vertex_shader": "./shaders/vertex/basic_texture.vert",
-                "fragment_shader" : "./shaders/vertex/sobel_edge.frag"    
+                "fragment_shader" : "./shaders/fragment/sobel_edge.frag"    
             }
         }
     ]

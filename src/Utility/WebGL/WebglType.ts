@@ -22,8 +22,7 @@ export interface MeshShapeStruct {
 }
 
 export interface ShaderConfigStruct {
-    material : MaterialDataSet,
-    frameBuffer? : Framebuffer,
+    material : GLSLDataSet,
     attributes : any,
     uniform : any,
     vertex_count: number,

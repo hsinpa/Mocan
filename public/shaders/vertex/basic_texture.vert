@@ -1,6 +1,3 @@
-
-//.vert
-export let BasicTextureVert = `
 precision mediump float;
 
 attribute vec2 a_position;
@@ -14,4 +11,3 @@ void main() {
     v_vertex = vec2(gl_Position.x, gl_Position.y);
     v_uv = a_uv;
 }
-`;

@@ -23,6 +23,14 @@ abstract class WebglCanvas {
         }
     }
 
+    public get CanvasWidth() {
+        return this._webglDom.width;
+    }
+
+    public get CanvasHeight() {
+        return this._webglDom.height;
+    }
+
     protected RegisterDomEvent() {
         window.addEventListener('resize', () => {
             this.AutoSetCanvasSize();

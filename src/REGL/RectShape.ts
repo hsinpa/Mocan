@@ -12,12 +12,13 @@ export function GetRectShape() : MeshShapeStruct  {
 }
 
 function GetQuadVertex() : number[] {
-    return [-1, -1, 0,
-        -1, 1, 0,
-        1, -1, 0,
-        1, -1, 0,
-        -1, 1, 0,
-        1, 1, 0];
+
+    return [-1, -1,
+        -1, 1,
+        1, -1,
+        1, -1,
+        -1, 1,
+        1, 1];
 }
 
 function GetQuadUV() : number[] {

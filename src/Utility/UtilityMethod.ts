@@ -115,3 +115,19 @@ export function IsMobileDevice(): boolean {
     var ua = navigator.userAgent;
     return /Android|webOS|iPhone|iPad|iPod/i.test(ua);
 }
+
+export async function FilesLoader(filePaths: string[]) : Promise<any[]>{
+
+    let promiseArray : Promise<Response>[] = [];
+
+    filePaths.forEach(x => {
+        promiseArray.push( fetch(x, {method: 'GET', credentials: 'include'}) );
+    });
+
+    return await Promise.all(promiseArray)
+    .then( responses => {
+        return Promise.all( responses.map(x=>
+            x.json()
+        ));
+    });
+}

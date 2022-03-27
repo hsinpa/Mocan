@@ -1,6 +1,6 @@
 
 export const Shaders = Object.freeze({
-    GuassianBlur : "GuassianBlur",
+    GaussianBlur : "GaussianBlur",
     SobelEdgeX :  "SobelEdgeX",
     SobelEdgeY :  "SobelEdgeY",
 });

@@ -15,3 +15,4 @@ export function CreateCanvasREGLCommand(regl : Regl, vertex : string, fragment :
         count: vertex_count
     });
 };
+

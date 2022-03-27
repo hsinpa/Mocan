@@ -13,7 +13,7 @@ export default class Materials {
     }
 
     public get_shader(name : string) {
-        this._materialCache.getValue(name);
+        return this._materialCache.getValue(name);
     }
 
     public async fetch_shaders(name : string, vertFilePath: string, fragFilePath: string) {
