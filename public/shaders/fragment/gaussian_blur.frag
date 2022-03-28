@@ -28,8 +28,8 @@ vec4 GetColorWithUV(vec2 uv, float weight, float offset_x, float offset_y) {
 }
 
 void main() {
-    vec4 mainTex = texture2D(u_mainTex, v_uv);
-    vec4 grayscale = LuminanceGrayscale(mainTex);
+    // vec4 mainTex = texture2D(u_mainTex, v_uv);
+    // vec4 grayscale = LuminanceGrayscale(mainTex);
 
     float scale = 1.0 / 16.0;
     vec4 color = vec4(0,0,0,0);

@@ -1,7 +1,7 @@
 import {ShaderConfigStruct, MaterialDataSet, MeshShapeStruct, MaterialList} from "../Utility/WebGL/WebglType";
 import Materials from "../Utility/WebGL/Materials";
 import {Shaders} from "./ShaderStaticFlag";
-import {GetRectShape} from "../REGL/RectShape";
+import {GetRectShape, FBO_SIZE} from "../REGL/RectShape";
 import REGL, {Framebuffer, Framebuffer2D, Regl, Texture, Texture2D, Vec2} from 'regl';
 import {CreateCanvasREGLCommand} from '../REGL/REGLCommands'
 
@@ -36,7 +36,7 @@ export default class ShaderManager {
     GetSobelEdgeXConfig(input : Framebuffer2D) {
         let material = this._materials.get_shader(Shaders.SobelEdge);
         let shaderConfig = this.GetGeneralShaderConfig(material);
-        shaderConfig.uniform = this.GetSobelEdgeUniform(input, 128, this.GetSobelKernelX());
+        shaderConfig.uniform = this.GetSobelEdgeUniform(input, FBO_SIZE, this.GetSobelKernelX());
 
         return shaderConfig;
     }
@@ -44,7 +44,7 @@ export default class ShaderManager {
     GetSobelEdgeYConfig(input : Framebuffer2D) {
         let material = this._materials.get_shader(Shaders.SobelEdge);
         let shaderConfig = this.GetGeneralShaderConfig(material);
-        shaderConfig.uniform = this.GetSobelEdgeUniform(input, 128, this.GetSobelKernelY());
+        shaderConfig.uniform = this.GetSobelEdgeUniform(input, FBO_SIZE, this.GetSobelKernelY());
     }
 
     private GetGaussianUniform(texture : Texture) {

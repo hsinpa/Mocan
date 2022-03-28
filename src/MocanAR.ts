@@ -1,5 +1,5 @@
 import WebglCanvas from './Utility/WebGL/WebglCanvas';
-import {GetRectShape} from './REGL/RectShape';
+import {GetRectShape, FBO_SIZE} from './REGL/RectShape';
 import ShaderManager from './Shader/ShaderManager';
 import Materials from './Utility/WebGL/Materials';
 import {MaterialList} from './Utility/WebGL/WebglType';
@@ -26,7 +26,7 @@ export default class WebAR extends WebglCanvas {
         this._materials = new Materials();
         await this._materials.AsyncSetUp(materials_json);
         
-        this._frameBufferHelper = new FrameBufferHelper(this._reglContext, this.CanvasWidth, this.CanvasHeight, 128);
+        this._frameBufferHelper = new FrameBufferHelper(this._reglContext, this.CanvasWidth, this.CanvasHeight, FBO_SIZE);
         this._shaderManager = new ShaderManager(this._reglContext, this._materials);
         this._harrisCorner = new HarrisCorner(this._shaderManager, this._frameBufferHelper);
 

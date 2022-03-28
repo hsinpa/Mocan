@@ -14,7 +14,9 @@ export default class HarrisCorner {
     private _frameBuffers : FrameBufferHelper
 
     private _gaussianBlurCommand : DrawCommand;
-    
+    private _sobelXCommand : DrawCommand;
+    private _sobelYCommand : DrawCommand;
+
     constructor(shaderManager : ShaderManager, frameBuffers : FrameBufferHelper) {
         this._shaderManager = shaderManager;
         this._frameBuffers = frameBuffers;
@@ -31,15 +33,17 @@ export default class HarrisCorner {
         this._cacheTexture = texture;
 
         let gaussianBlurConfig = this._shaderManager.GetGaussianBlurConfig(this._cacheTexture);
-        this._gaussianBlurCommand = this._shaderManager.CreateActionCommand(gaussianBlurConfig, 
-                                                                            this._frameBuffers.GetFrameBufferByIndex(0));
-                                                                            
+        let guassianFBO = this._frameBuffers.GetFrameBufferByIndex(0);
+        this._gaussianBlurCommand = this._shaderManager.CreateActionCommand(gaussianBlurConfig, guassianFBO);
+        
+        this._sobelXCommand = this._shaderManager.CreateActionCommand(this._shaderManager.GetSobelEdgeXConfig(guassianFBO), null);
     }
 
     public ProcessPrefacePipeline() {
         if (this._cacheTexture == null) return;
 
         this._gaussianBlurCommand();
+        this._sobelXCommand();
     }
 
     //#endregion
