@@ -2,7 +2,7 @@ import {ShaderConfigStruct, MaterialDataSet, MeshShapeStruct, MaterialList} from
 import Materials from "../Utility/WebGL/Materials";
 import {Shaders} from "./ShaderStaticFlag";
 import {GetRectShape} from "../REGL/RectShape";
-import REGL, {Framebuffer, Regl, Texture, Texture2D, Vec2} from 'regl';
+import REGL, {Framebuffer, Framebuffer2D, Regl, Texture, Texture2D, Vec2} from 'regl';
 import {CreateCanvasREGLCommand} from '../REGL/REGLCommands'
 
 export default class ShaderManager {
@@ -18,16 +18,14 @@ export default class ShaderManager {
     }
 
     //#region REGLCommands
-    CreateActionCommand( config : ShaderConfigStruct) {
-        return CreateCanvasREGLCommand(this._regl, config.material.vertex_shader, config.material.fragment_shader, null, config.attributes, config.uniform, config.vertex_count);
+    CreateActionCommand( config : ShaderConfigStruct, frameBuffer : Framebuffer) {
+        return CreateCanvasREGLCommand(this._regl, config.material.vertex_shader, config.material.fragment_shader, frameBuffer, config.attributes, config.uniform, config.vertex_count);
     }
 
     //#endregion
 
     //#region Config
     GetGaussianBlurConfig(input : Texture) : ShaderConfigStruct{
-
-        console.log(`Width ${input.width}, Height ${input.height}`);
         let material = this._materials.get_shader(Shaders.GaussianBlur);
         let shaderConfig = this.GetGeneralShaderConfig(material);
         shaderConfig.uniform = this.GetGaussianUniform(input);
@@ -35,20 +33,41 @@ export default class ShaderManager {
         return shaderConfig;
     }
     
-    GetSobelEdgeXConfig() {
-    
+    GetSobelEdgeXConfig(input : Framebuffer2D) {
+        let material = this._materials.get_shader(Shaders.SobelEdge);
+        let shaderConfig = this.GetGeneralShaderConfig(material);
+        shaderConfig.uniform = this.GetSobelEdgeUniform(input, 128, this.GetSobelKernelX());
+
+        return shaderConfig;
     }
     
-    GetSobelEdgeYConfig() {
-    
+    GetSobelEdgeYConfig(input : Framebuffer2D) {
+        let material = this._materials.get_shader(Shaders.SobelEdge);
+        let shaderConfig = this.GetGeneralShaderConfig(material);
+        shaderConfig.uniform = this.GetSobelEdgeUniform(input, 128, this.GetSobelKernelY());
     }
 
     private GetGaussianUniform(texture : Texture) {
         return {
             u_mainTex : texture,
             u_texSize : [texture.width, texture.height]
-            // u_texSize : this._regl.prop<any, "u_texSize">("u_texSize")
         }
+    }
+
+    private GetSobelEdgeUniform(texture : Framebuffer2D, size : number, kernel:  number[]) {
+        return {
+            u_mainTex : texture,
+            u_texSize : [size, size],
+            u_kernel : kernel
+        }
+    }
+
+    private GetSobelKernelX() {
+        return [-1, 0, 1, -2, 0, 2, -1, 0, 1];
+    }
+
+    private GetSobelKernelY() {
+        return [1, 2, 1, 0, 0, 0, -1, -2, -1];
     }
 
     private GetGeneralShaderConfig(material : MaterialDataSet) : ShaderConfigStruct {

@@ -4,6 +4,7 @@ import ShaderManager from './Shader/ShaderManager';
 import Materials from './Utility/WebGL/Materials';
 import {MaterialList} from './Utility/WebGL/WebglType';
 import HarrisCorner from './FeaturePoints/HarrisCorner';
+import FrameBufferHelper from './Shader/FrameBufferHelper';
 import TextureManager from './Utility/TextureManager';
 
 export default class WebAR extends WebglCanvas {
@@ -12,6 +13,7 @@ export default class WebAR extends WebglCanvas {
     private _materials : Materials;
     private _shaderManager : ShaderManager;
     private _harrisCorner : HarrisCorner;
+    private _frameBufferHelper : FrameBufferHelper;
 
     constructor(webglQuery : string) {
         super(webglQuery);
@@ -24,8 +26,9 @@ export default class WebAR extends WebglCanvas {
         this._materials = new Materials();
         await this._materials.AsyncSetUp(materials_json);
         
+        this._frameBufferHelper = new FrameBufferHelper(this._reglContext, this.CanvasWidth, this.CanvasHeight, 128);
         this._shaderManager = new ShaderManager(this._reglContext, this._materials);
-        this._harrisCorner = new HarrisCorner(this._shaderManager);
+        this._harrisCorner = new HarrisCorner(this._shaderManager, this._frameBufferHelper);
 
         let initTexture = await this._textureManager.GetREGLTexture("./texture/landscape_sample_01.jpg");
         this._harrisCorner.PrepareCommands(initTexture);

@@ -1,0 +1,62 @@
+import {DrawCommand, Regl, Framebuffer2D} from 'regl';
+
+const SIZE : number = 256;
+
+export default class FrameBufferHelper {
+    private _reglContext : Regl;
+
+    private index : number = 0;
+    private _cycleFrameBuffers : Framebuffer2D[];
+
+    private _texWidth : number;
+    private _texHeight : number;
+
+    private _outputWidth : number;
+    private _outputHeight: number;
+
+    public get OutputWidth() { return this._outputWidth; }
+    public get OutputHeight() { return this._outputHeight; }
+
+    constructor(reglContext : Regl, textureWidth: number, textureHeight : number, targetSize : number) {
+        this._reglContext = reglContext;
+        this._texWidth = textureWidth;
+        this._texHeight = textureHeight;
+
+        let aspectRatio = textureHeight / textureWidth;
+        this._outputWidth = targetSize;
+        this._outputHeight = targetSize * aspectRatio;
+
+        this._cycleFrameBuffers = this.CreateFrameBuffers(3);
+    }
+
+    public GetFrameBuffer() {
+        let FBO = this._cycleFrameBuffers[this.index];
+        this.index = (this.index + 1) % this._cycleFrameBuffers.length;
+        return FBO;
+    }
+
+    public GetFrameBufferByIndex(index : number) {
+        return this._cycleFrameBuffers[index];
+    }
+
+    private CreateFrameBuffers(bufferCount : number) {
+        let fbos = [];
+
+        for (let i = 0; i < bufferCount; i++) {
+            fbos.push(
+                this.CreateFrameBuffer(this._outputWidth, this._outputHeight, false, false)
+            );
+        }
+
+        return fbos;
+    }
+
+    private CreateFrameBuffer(width : number, height : number, stencil: boolean, depth : boolean) {
+        return this._reglContext.framebuffer({
+            width: width,
+            height: height,
+            stencil: stencil,
+            depth : depth
+        });
+    }
+}
