@@ -2,7 +2,7 @@ import {CreateCanvasREGLCommand} from '../REGL/REGLCommands';
 import ShaderManager from '../Shader/ShaderManager';
 import {DrawCommand, Regl, Texture} from 'regl';
 import FrameBufferHelper from '../Shader/FrameBufferHelper';
-
+import numjs from 'numjs';
 
 export default class HarrisCorner {
 
@@ -53,9 +53,20 @@ export default class HarrisCorner {
         let sobelXFBO = this._frameBuffers.GetFrameBufferByIndex(1);
         let sobelYFBO = this._frameBuffers.GetFrameBufferByIndex(2);
 
+        let xGradientArray = await this._frameBuffers.ReadAsyncBufferPixel(sobelXFBO);
+        let yGradientArray = await this._frameBuffers.ReadAsyncBufferPixel(sobelYFBO);
+        let dx : any = numjs.uint32(xGradientArray);
+        let dy : any = numjs.uint32(yGradientArray);
 
-        let result = await this._frameBuffers.ReadAsyncBufferPixel(sobelXFBO);
-        console.log(result);
+        let Ixx = dx.pow(2);
+        let Ixy = numjs.multiply(dx, dy);
+        let Iyy = dy.pow(2);
+        console.log(Ixx);
+        console.log(Ixy);
+        console.log(Iyy);
+
+        //console.log(ynumGradient);
+
     }
 
     //#endregion

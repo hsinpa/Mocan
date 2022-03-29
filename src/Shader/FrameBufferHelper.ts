@@ -29,12 +29,12 @@ export default class FrameBufferHelper {
         this._cycleFrameBuffers = this.CreateFrameBuffers(3);
     }
 
-    public ReadAsyncBufferPixel(fbo : Framebuffer2D) {
+    public ReadAsyncBufferPixel(fbo : Framebuffer2D) : Promise<Uint8Array> {
         return new Promise((resolve, reject) => {
             this._reglContext({framebuffer: fbo})(() => {
                 var pixels = this._reglContext.read();
 
-                resolve(pixels);
+                resolve( this.RetrieveGrayColor(pixels) );
             });     
         });
     }
@@ -70,5 +70,17 @@ export default class FrameBufferHelper {
             stencil: stencil,
             depth : depth
         });
+    }
+
+    private RetrieveGrayColor(colorArray: Uint8Array) {
+        let length = colorArray.length;
+        let grayColorArray : Uint8Array = new Uint8Array(length / 4);
+        let gIndex = 0;
+
+        for (let i = 0; i < length; i += 4) {
+            grayColorArray[gIndex] = colorArray[i];
+            gIndex++;
+        }
+        return grayColorArray;
     }
 }

@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "./node_modules/.bin/snowpack dev",
+    "server": "./node_modules/.bin/snowpack dev --polyfill-node",
     "build": "./node_modules/.bin/snowpack build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/numjs": "^0.16.1",
     "gl-matrix": "^3.4.3",
     "mathjs": "^10.4.0",
     "node-sass": "^7.0.1",
