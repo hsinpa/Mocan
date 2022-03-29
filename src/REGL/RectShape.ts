@@ -1,6 +1,6 @@
 import {MeshShapeStruct} from "../Utility/WebGL/WebglType";
 
-export const FBO_SIZE = 256;
+export const FBO_SIZE = 64;
 
 export function GetRectShape() : MeshShapeStruct  {
     let meshType : MeshShapeStruct = {

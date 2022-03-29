@@ -34,17 +34,26 @@ export default class ShaderManager {
     }
     
     GetSobelEdgeXConfig(input : Framebuffer2D) {
-        let material = this._materials.get_shader(Shaders.SobelEdge);
-        let shaderConfig = this.GetGeneralShaderConfig(material);
-        shaderConfig.uniform = this.GetSobelEdgeUniform(input, FBO_SIZE, this.GetSobelKernelX());
+        return this.GetSobelEdgeConfig(input, this.GetSobelKernelX());
+    }
 
-        return shaderConfig;
+    GetSobelEdgeYConfig(input : Framebuffer2D) {
+        return this.GetSobelEdgeConfig(input, this.GetSobelKernelY());
     }
     
-    GetSobelEdgeYConfig(input : Framebuffer2D) {
+    private GetSobelEdgeConfig(input : Framebuffer2D, kernel : number[]) {
         let material = this._materials.get_shader(Shaders.SobelEdge);
         let shaderConfig = this.GetGeneralShaderConfig(material);
-        shaderConfig.uniform = this.GetSobelEdgeUniform(input, FBO_SIZE, this.GetSobelKernelY());
+        shaderConfig.uniform = this.GetSobelEdgeUniform(input, FBO_SIZE, kernel);
+        return shaderConfig;
+    }
+
+    private GetSobelKernelX() {
+        return [-1, 0, 1, -2, 0, 2, -1, 0, 1];
+    }
+
+    private GetSobelKernelY() {
+        return [1, 2, 1, 0, 0, 0, -1, -2, -1];
     }
 
     private GetGaussianUniform(texture : Texture) {
@@ -60,14 +69,6 @@ export default class ShaderManager {
             u_texSize : [size, size],
             u_kernel : kernel
         }
-    }
-
-    private GetSobelKernelX() {
-        return [-1, 0, 1, -2, 0, 2, -1, 0, 1];
-    }
-
-    private GetSobelKernelY() {
-        return [1, 2, 1, 0, 0, 0, -1, -2, -1];
     }
 
     private GetGeneralShaderConfig(material : MaterialDataSet) : ShaderConfigStruct {

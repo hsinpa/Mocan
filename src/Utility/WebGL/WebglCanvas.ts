@@ -41,8 +41,8 @@ abstract class WebglCanvas {
         let regl = await reglPromise;
 
         return regl.default({
-            canvas : webglDom
-            //attributes : {preserveDrawingBuffer : true}
+            canvas : webglDom,
+            attributes : {preserveDrawingBuffer : true}
         });
     }
 

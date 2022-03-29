@@ -1,7 +1,5 @@
 import {DrawCommand, Regl, Framebuffer2D} from 'regl';
 
-const SIZE : number = 256;
-
 export default class FrameBufferHelper {
     private _reglContext : Regl;
 
@@ -23,10 +21,22 @@ export default class FrameBufferHelper {
         this._texHeight = textureHeight;
 
         let aspectRatio = textureHeight / textureWidth;
+        console.log("AspectRatio " + aspectRatio);
+        
         this._outputWidth = targetSize;
-        this._outputHeight = targetSize * aspectRatio;
+        this._outputHeight = Math.floor(targetSize * aspectRatio);
 
         this._cycleFrameBuffers = this.CreateFrameBuffers(3);
+    }
+
+    public ReadAsyncBufferPixel(fbo : Framebuffer2D) {
+        return new Promise((resolve, reject) => {
+            this._reglContext({framebuffer: fbo})(() => {
+                var pixels = this._reglContext.read();
+
+                resolve(pixels);
+            });     
+        });
     }
 
     public GetFrameBuffer() {
@@ -36,6 +46,8 @@ export default class FrameBufferHelper {
     }
 
     public GetFrameBufferByIndex(index : number) {
+        //To prevent index error
+        index = (index) % this._cycleFrameBuffers.length;
         return this._cycleFrameBuffers[index];
     }
 

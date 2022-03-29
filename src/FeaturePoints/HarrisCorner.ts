@@ -34,16 +34,28 @@ export default class HarrisCorner {
 
         let gaussianBlurConfig = this._shaderManager.GetGaussianBlurConfig(this._cacheTexture);
         let guassianFBO = this._frameBuffers.GetFrameBufferByIndex(0);
+        let sobelXFBO = this._frameBuffers.GetFrameBufferByIndex(1);
+        let sobelYFBO = this._frameBuffers.GetFrameBufferByIndex(2);
+
         this._gaussianBlurCommand = this._shaderManager.CreateActionCommand(gaussianBlurConfig, guassianFBO);
         
-        this._sobelXCommand = this._shaderManager.CreateActionCommand(this._shaderManager.GetSobelEdgeXConfig(guassianFBO), null);
+        this._sobelXCommand = this._shaderManager.CreateActionCommand(this._shaderManager.GetSobelEdgeXConfig(guassianFBO), sobelXFBO);
+        this._sobelYCommand = this._shaderManager.CreateActionCommand(this._shaderManager.GetSobelEdgeYConfig(guassianFBO), sobelYFBO);
     }
 
-    public ProcessPrefacePipeline() {
+    public async ProcessPrefacePipeline() {
         if (this._cacheTexture == null) return;
 
         this._gaussianBlurCommand();
         this._sobelXCommand();
+        this._sobelYCommand();
+
+        let sobelXFBO = this._frameBuffers.GetFrameBufferByIndex(1);
+        let sobelYFBO = this._frameBuffers.GetFrameBufferByIndex(2);
+
+
+        let result = await this._frameBuffers.ReadAsyncBufferPixel(sobelXFBO);
+        console.log(result);
     }
 
     //#endregion
