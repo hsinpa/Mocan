@@ -13,6 +13,13 @@
                 "vertex_shader": "./shaders/vertex/basic_texture.vert",
                 "fragment_shader" : "./shaders/fragment/sobel_edge.frag"    
             }
+        },
+        {
+            "name" : "RenderTexture",
+            "glsl" : {
+                "vertex_shader": "./shaders/vertex/basic_texture.vert",
+                "fragment_shader" : "./shaders/fragment/basic_texture.frag"    
+            }
         }
     ]
 }

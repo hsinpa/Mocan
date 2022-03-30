@@ -40,6 +40,13 @@ export default class ShaderManager {
     GetSobelEdgeYConfig(input : Framebuffer2D) {
         return this.GetSobelEdgeConfig(input, this.GetSobelKernelY());
     }
+
+    GetRenderConfig(input : Framebuffer2D) {
+        let material = this._materials.get_shader(Shaders.RenderTexture);
+        let config = this.GetGeneralShaderConfig(material);
+        config.uniform = {u_mainTex : input};
+        return config;
+    }
     
     private GetSobelEdgeConfig(input : Framebuffer2D, kernel : number[]) {
         let material = this._materials.get_shader(Shaders.SobelEdge);

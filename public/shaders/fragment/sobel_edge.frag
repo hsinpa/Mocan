@@ -41,7 +41,7 @@ void main() {
     finalColor += GetColorWithUV(v_uv, u_kernel[2][0], -1.0, -1.0);
     finalColor += GetColorWithUV(v_uv, u_kernel[2][1], 0.0, -1.0);
     finalColor += GetColorWithUV(v_uv, u_kernel[2][2], 1.0, -1.0);
-
+    finalColor /= 6.0;
     finalColor.w = 1.0;
 
     gl_FragColor = finalColor;
