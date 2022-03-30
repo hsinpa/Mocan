@@ -29,6 +29,7 @@ export default class WebAR extends WebglCanvas {
         this._frameBufferHelper = new FrameBufferHelper(this._reglContext, this.CanvasWidth, this.CanvasHeight, FBO_SIZE);
         this._shaderManager = new ShaderManager(this._reglContext, this._materials);
         this._harrisCorner = new HarrisCorner(this._shaderManager, this._frameBufferHelper);
+        this._harrisCorner.SetConfig(0.04, 5, 10000);
 
         let initTexture = await this._textureManager.GetREGLTexture("./texture/landscape_sample_01.jpg");
         this._harrisCorner.PrepareCommands(initTexture);

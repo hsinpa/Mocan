@@ -50,23 +50,54 @@ export default class HarrisCorner {
         this._sobelXCommand();
         this._sobelYCommand();
 
+        let offset = Math.floor(this._window_size / 2);
+        let y_range = this._frameBuffers.OutputHeight - offset;
+        let x_range = this._frameBuffers.OutputWidth - offset;
+        
         let sobelXFBO = this._frameBuffers.GetFrameBufferByIndex(1);
         let sobelYFBO = this._frameBuffers.GetFrameBufferByIndex(2);
 
         let xGradientArray = await this._frameBuffers.ReadAsyncBufferPixel(sobelXFBO);
         let yGradientArray = await this._frameBuffers.ReadAsyncBufferPixel(sobelYFBO);
         let dx : any = numjs.uint32(xGradientArray);
+            dx = dx.reshape(this._frameBuffers.OutputWidth, this._frameBuffers.OutputHeight);
         let dy : any = numjs.uint32(yGradientArray);
+            dy = dy.reshape(this._frameBuffers.OutputWidth, this._frameBuffers.OutputHeight);
 
         let Ixx = dx.pow(2);
         let Ixy = numjs.multiply(dx, dy);
         let Iyy = dy.pow(2);
-        console.log(Ixx);
-        console.log(Ixy);
-        console.log(Iyy);
+        // console.log(Ixx);
+        // console.log(Ixy);
+        // console.log(Iyy);
 
         //console.log(ynumGradient);
 
+        for (let y = offset; y < y_range; y++) {
+            for (let x = offset; x < x_range; x++) {
+                //Values of sliding window
+                let start_y = y - offset
+                let end_y = y + offset + 1
+                let start_x = x - offset
+                let end_x = x + offset + 1
+                
+                //console.log(start_y, end_y,  start_x,  end_x);
+            
+                //The variable names are representative to 
+                //the variable of the Harris corner equation
+                let windowIxx = Ixx.slice([start_y, end_y], [start_x, end_x]);
+                let windowIxy = Ixy.slice([start_y, end_y], [start_x, end_x]);
+                let windowIyy = Iyy.slice([start_y, end_y], [start_x, end_x]);
+
+
+                let Sxx = windowIxx.sum();
+                let Sxy = windowIxy.sum();
+                let Syy = windowIyy.sum();
+
+                
+
+            }
+        }
     }
 
     //#endregion
