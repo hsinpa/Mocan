@@ -1,6 +1,13 @@
 {
     "materials" : [
         {
+            "name" : "RenderTexture",
+            "glsl" : {
+                "vertex_shader": "./shaders/vertex/basic_texture.vert",
+                "fragment_shader" : "./shaders/fragment/basic_texture.frag"    
+            }
+        },
+        {
             "name" : "GaussianBlur",
             "glsl" : {
                 "vertex_shader": "./shaders/vertex/basic_texture.vert",
@@ -15,10 +22,10 @@
             }
         },
         {
-            "name" : "RenderTexture",
+            "name" : "HarrisCorner",
             "glsl" : {
                 "vertex_shader": "./shaders/vertex/basic_texture.vert",
-                "fragment_shader" : "./shaders/fragment/basic_texture.frag"    
+                "fragment_shader" : "./shaders/fragment/harris_corner.frag"    
             }
         }
     ]

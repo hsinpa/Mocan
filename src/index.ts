@@ -22,6 +22,6 @@ window.onload = async () => {
 
     await mocanAR.SetUp(shaderConfigStruct);
 
-    let cornerData = await mocanAR.Render();
-    debugCanvas.DrawDots(cornerData, 1, 1);
+    mocanAR.Render();
+    // debugCanvas.DrawDots(cornerData, 1, 1);
 };

@@ -36,6 +36,6 @@ export default class WebAR extends WebglCanvas {
     }
 
     async Render() {
-        return await this._harrisCorner.ProcessPrefacePipeline();
+        this._harrisCorner.ProcessPrefacePipeline();
     }
 }

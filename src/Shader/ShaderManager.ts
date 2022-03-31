@@ -33,25 +33,22 @@ export default class ShaderManager {
         return shaderConfig;
     }
     
-    GetSobelEdgeXConfig(input : Framebuffer2D) {
-        return this.GetSobelEdgeConfig(input, this.GetSobelKernelX());
+    public GetSobelEdgeConfig(input : Framebuffer2D) {
+        return this.GetMatConfig(Shaders.SobelEdge, this.GetSobelEdgeUniform(input, FBO_SIZE));
     }
 
-    GetSobelEdgeYConfig(input : Framebuffer2D) {
-        return this.GetSobelEdgeConfig(input, this.GetSobelKernelY());
+    public GetCornerConfig(blurFBO: Framebuffer2D, sobelFBO : Framebuffer2D) {
+        return this.GetMatConfig(Shaders.HarrisCorner, this.GetCornerUniform(blurFBO, sobelFBO, FBO_SIZE));
     }
 
-    GetRenderConfig(input : Framebuffer2D) {
-        let material = this._materials.get_shader(Shaders.RenderTexture);
-        let config = this.GetGeneralShaderConfig(material);
-        config.uniform = {u_mainTex : input};
-        return config;
+    public GetRenderConfig(input : Framebuffer2D) {        
+        return this.GetMatConfig(Shaders.RenderTexture, {u_mainTex : input});
     }
-    
-    private GetSobelEdgeConfig(input : Framebuffer2D, kernel : number[]) {
-        let material = this._materials.get_shader(Shaders.SobelEdge);
+
+    private GetMatConfig(material_name : string, uniforms: any ) {
+        let material = this._materials.get_shader(material_name);
         let shaderConfig = this.GetGeneralShaderConfig(material);
-        shaderConfig.uniform = this.GetSobelEdgeUniform(input, FBO_SIZE, kernel);
+        shaderConfig.uniform = uniforms;
         return shaderConfig;
     }
 
@@ -70,11 +67,22 @@ export default class ShaderManager {
         }
     }
 
-    private GetSobelEdgeUniform(texture : Framebuffer2D, size : number, kernel:  number[]) {
+    private GetSobelEdgeUniform(texture : Framebuffer2D, size : number) {
         return {
             u_mainTex : texture,
             u_texSize : [size, size],
-            u_kernel : kernel
+            u_kernel_x : this.GetSobelKernelX(),
+            u_kernel_y : this.GetSobelKernelY()
+        }
+    }
+
+    private GetCornerUniform(blurFBO: Framebuffer2D, sobelFBO : Framebuffer2D, size : number) {
+        return {
+            u_mainTex : blurFBO,
+            u_sobelTex : sobelFBO,
+            u_texSize : [size, size],
+            u_threshold : 0.03,
+            u_k : 0.04,
         }
     }
 
