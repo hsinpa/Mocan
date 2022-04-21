@@ -25,10 +25,10 @@ export default class ShaderManager {
     //#endregion
 
     //#region Config
-    GetGaussianBlurConfig(input : Texture) : ShaderConfigStruct{
+    GetGaussianBlurConfig(width : number, height : number) : ShaderConfigStruct{
         let material = this._materials.get_shader(Shaders.GaussianBlur);
         let shaderConfig = this.GetGeneralShaderConfig(material);
-        shaderConfig.uniform = this.GetGaussianUniform(input);
+        shaderConfig.uniform = this.GetGaussianUniform( width, height);
 
         return shaderConfig;
     }
@@ -60,10 +60,10 @@ export default class ShaderManager {
         return [1, 2, 1, 0, 0, 0, -1, -2, -1];
     }
 
-    private GetGaussianUniform(texture : Texture) {
+    private GetGaussianUniform(width : number, height : number) {
         return {
-            u_mainTex : texture,
-            u_texSize : [texture.width, texture.height]
+            u_mainTex : this._regl.prop<any, "u_mainTex">("u_mainTex"),
+            u_texSize : [width, height]
         }
     }
 

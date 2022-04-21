@@ -39,7 +39,7 @@ export default class HarrisCorner {
     public async PrepareCommands(texture : Texture) {
         this._cacheTexture = texture;
 
-        let gaussianBlurConfig = this._shaderManager.GetGaussianBlurConfig(this._cacheTexture);
+        let gaussianBlurConfig = this._shaderManager.GetGaussianBlurConfig(this._cacheTexture.width, this._cacheTexture.height);
         
         let guassianFBO = this._cycleBuffer.GetFrameBufferByIndex(0);
         let sobelFBO = this._cycleBuffer.GetFrameBufferByIndex(1);
@@ -56,7 +56,7 @@ export default class HarrisCorner {
     public async ProcessPrefacePipeline() {
         if (this._cacheTexture == null) return;
 
-        this._gaussianBlurCommand();
+        this._gaussianBlurCommand({u_mainTex : this._cacheTexture});
         this._sobelEdgeCommand();
         this._harrisCornerCommand();
         this._renderTexCommand();

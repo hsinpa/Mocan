@@ -6,6 +6,8 @@ import {MaterialList} from './Utility/WebGL/WebglType';
 import HarrisCorner from './FeaturePoints/HarrisCorner';
 import FrameBufferHelper from './Shader/FrameBufferHelper';
 import TextureManager from './Utility/TextureManager';
+import ScaledPyramid from './FeaturePoints/ScaledPyramid';
+import REGL, { Regl } from 'regl';
 
 export default class WebAR extends WebglCanvas {
 
@@ -14,6 +16,9 @@ export default class WebAR extends WebglCanvas {
     private _shaderManager : ShaderManager;
     private _harrisCorner : HarrisCorner;
     private _frameBufferHelper : FrameBufferHelper;
+
+    private _scaledPyramid : ScaledPyramid;
+    private _inputTexture : REGL.Texture;
 
     constructor(webglQuery : string) {
         super(webglQuery);
@@ -31,11 +36,16 @@ export default class WebAR extends WebglCanvas {
         this._harrisCorner = new HarrisCorner(this._shaderManager, this._frameBufferHelper);
         this._harrisCorner.SetConfig(this.CanvasWidth, this.CanvasHeight, 0.04, 5, 10000);
 
-        let initTexture = await this._textureManager.GetREGLTexture("./texture/landscape_sample_01.jpg");
-        this._harrisCorner.PrepareCommands(initTexture);
-    }
+        this._scaledPyramid = new ScaledPyramid(this._shaderManager, this._frameBufferHelper);
+
+        this._inputTexture = await this._textureManager.GetREGLTexture("./texture/landscape_sample_01.jpg");
+        this._harrisCorner.PrepareCommands(this._inputTexture);
+
+        this._scaledPyramid.Config(this.CanvasWidth, this.CanvasHeight, 1024, 4, 2);
+    } 
 
     async Render() {
-        this._harrisCorner.ProcessPrefacePipeline();
+        //this._harrisCorner.ProcessPrefacePipeline();
+        this._scaledPyramid.ProcessBlurPipeline(this._inputTexture, this._reglContext);
     }
 }
