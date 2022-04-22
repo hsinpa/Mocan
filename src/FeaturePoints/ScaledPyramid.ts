@@ -39,10 +39,10 @@ export default class ScaledPyramid {
         let gaussianBlurConfig = this._shaderManager.GetGaussianBlurConfig(this._originalWidth, this._originalHeight);
 
         this._gaussianBlurCommand = this._shaderManager.CreateActionCommand(gaussianBlurConfig, null);
-        this._renderTexCommand = this._shaderManager.CreateActionCommand(this._shaderManager.GetRenderConfig(this._pyramid[0].fbo), null);
+        this._renderTexCommand = this._shaderManager.CreateActionCommand(this._shaderManager.GetRenderConfig(this._pyramid[1].fbo), null);
     }
 
-    public ProcessBlurPipeline(inputTexture : REGL.Texture, reglContext : Regl) {
+    public ProcessBlurPipeline(inputTexture : REGL.Texture) {
         type TextureType = REGL.Texture | Framebuffer2D;
 
         let fboInputTex : TextureType = inputTexture;
@@ -55,13 +55,12 @@ export default class ScaledPyramid {
             }
 
             for (let o = 0; o < p_layer.octave; o++) {
-                let drawFBO = p_layer.cycleBuffer.GetFrameBuffer();
-
-                console.log("Octave " + o);
 
                 if (o > 0) {
                     fboInputTex = p_layer.cycleBuffer.PreviousFrameBuffer();
                 }
+
+                let drawFBO = p_layer.cycleBuffer.GetFrameBuffer();
 
                 if (o == p_layer.octave - 1) {
                     drawFBO = p_layer.fbo;
@@ -72,8 +71,6 @@ export default class ScaledPyramid {
                 });
             }
         }
-
-        this._renderTexCommand();
     }
 
     private CreatePyramidStruct() {
