@@ -1,6 +1,5 @@
 import FrameBufferHelper from "../Shader/FrameBufferHelper";
 import ShaderManager from "../Shader/ShaderManager";
-import CycleBuffer from "../Shader/CycleBuffer";
 import {ScalePyramidStruct} from "../FeaturePoints/DataStructure";
 import REGL, { DrawCommand, Framebuffer2D, Regl } from "regl";
 
@@ -17,8 +16,9 @@ export default class ScaledPyramid {
     private _octave: number;
 
     private _pyramid : ScalePyramidStruct[] = [];
+    public get Pyramid() { return this._pyramid; }
+
     private _gaussianBlurCommand : DrawCommand;
-    private _renderTexCommand : DrawCommand;
 
     constructor(shaderManager : ShaderManager, frameBuffers : FrameBufferHelper) {
         this._shaderManager = shaderManager;
@@ -39,7 +39,6 @@ export default class ScaledPyramid {
         let gaussianBlurConfig = this._shaderManager.GetGaussianBlurConfig(this._originalWidth, this._originalHeight);
 
         this._gaussianBlurCommand = this._shaderManager.CreateActionCommand(gaussianBlurConfig, null);
-        this._renderTexCommand = this._shaderManager.CreateActionCommand(this._shaderManager.GetRenderConfig(this._pyramid[1].fbo), null);
     }
 
     public ProcessBlurPipeline(inputTexture : REGL.Texture) {
