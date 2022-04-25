@@ -31,25 +31,43 @@ void main() {
     // vec4 mainTex = texture2D(u_mainTex, v_uv);
     // vec4 grayscale = LuminanceGrayscale(mainTex);
 
-    float scale = 1.0 / 16.0;
     vec4 color = vec4(0,0,0,0);
+    
+    //http://demofox.org/gauss.html
+    //Sigma = 0.61
 
-    //Top 
-    color += GetColorWithUV(v_uv, 1.0, -1.0, 1.0);
-    color += GetColorWithUV(v_uv, 2.0, 0.0, 1.0);
-    color += GetColorWithUV(v_uv, 1.0, 1.0, 1.0);
+    //First Row
+    //color += GetColorWithUV(v_uv, 1.0, -2.0, 2.0);
+    color += GetColorWithUV(v_uv, 0.0014, -1.0, 2.0);
+    color += GetColorWithUV(v_uv, 0.0041, 0.0, 2.0);
+    color += GetColorWithUV(v_uv, 0.0014, 1.0, 2.0);
+    //color += GetColorWithUV(v_uv, 1.0, 2.0, 2.0);
+
+    //Second Row
+    color += GetColorWithUV(v_uv, 0.0014, -2.0, 1.0);
+    color += GetColorWithUV(v_uv, 0.0397, -1.0, 1.0);
+    color += GetColorWithUV(v_uv, 0.1171, 0.0, 1.0);
+    color += GetColorWithUV(v_uv, 0.0397, 1.0, 1.0);
+    color += GetColorWithUV(v_uv, 0.0014, 2.0, 1.0);
 
     //Middle
-    color += GetColorWithUV(v_uv, 2.0, -1.0, 0.0);
-    color += GetColorWithUV(v_uv, 4.0, 0.0, 0.0);
-    color += GetColorWithUV(v_uv, 2.0, 1.0, 0.0);
+    color += GetColorWithUV(v_uv, 0.0041, -2.0, 0.0);
+    color += GetColorWithUV(v_uv, 0.1171, -1.0, 0.0);
+    color += GetColorWithUV(v_uv, 0.3453, 0.0, 0.0);
+    color += GetColorWithUV(v_uv, 0.1171, 1.0, 0.0);
+    color += GetColorWithUV(v_uv, 0.0041, 2.0, 0.0);
 
-    //Bottom
-    color += GetColorWithUV(v_uv, 1.0, -1.0, -1.0);
-    color += GetColorWithUV(v_uv, 2.0, 0.0, -1.0);
-    color += GetColorWithUV(v_uv, 1.0, 1.0, -1.0);
+    //Forth Row
+    color += GetColorWithUV(v_uv, 0.0014, -2.0, -1.0);
+    color += GetColorWithUV(v_uv, 0.0397, -1.0, -1.0);
+    color += GetColorWithUV(v_uv, 0.1171, 0.0, -1.0);
+    color += GetColorWithUV(v_uv, 0.0397, 1.0, -1.0);
+    color += GetColorWithUV(v_uv, 0.0014, 2.0, -1.0);
 
-    color *= scale;
+    //Fifth Row
+    color += GetColorWithUV(v_uv, 0.0014, -1.0, -2.0);
+    color += GetColorWithUV(v_uv, 0.0041, 0.0, -2.0);
+    color += GetColorWithUV(v_uv, 0.0014, 1.0, -2.0);
 
     color.w = 1.0;
     gl_FragColor = color;

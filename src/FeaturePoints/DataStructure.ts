@@ -3,7 +3,9 @@ import { Framebuffer2D } from "regl";
 
 export interface ScalePyramidStruct {
     cycleBuffer : CycleBuffer,
-    fbo : Framebuffer2D
+    fbo : Framebuffer2D,
+    sobel: Framebuffer2D,
     octave : number,
-    size : number
+    width : number,
+    height : number,
 }

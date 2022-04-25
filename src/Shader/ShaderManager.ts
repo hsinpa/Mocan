@@ -18,8 +18,8 @@ export default class ShaderManager {
     }
 
     //#region REGLCommands
-    CreateActionCommand( config : ShaderConfigStruct, frameBuffer : Framebuffer) {
-        return CreateCanvasREGLCommand(this._regl, config.material.vertex_shader, config.material.fragment_shader, frameBuffer, config.attributes, config.uniform, config.vertex_count);
+    CreateActionCommand( config : ShaderConfigStruct) {
+        return CreateCanvasREGLCommand(this._regl, config.material.vertex_shader, config.material.fragment_shader, config.attributes, config.uniform, config.vertex_count);
     }
 
     //#endregion
@@ -33,8 +33,8 @@ export default class ShaderManager {
         return shaderConfig;
     }
     
-    public GetSobelEdgeConfig(input : Framebuffer2D) {
-        return this.GetMatConfig(Shaders.SobelEdge, this.GetSobelEdgeUniform(input, FBO_SIZE));
+    public GetSobelEdgeConfig() {
+        return this.GetMatConfig(Shaders.SobelEdge, this.GetSobelEdgeUniform());
     }
 
     public GetCornerConfig(blurFBO: Framebuffer2D, sobelFBO : Framebuffer2D) {
@@ -67,10 +67,10 @@ export default class ShaderManager {
         }
     }
 
-    private GetSobelEdgeUniform(texture : Framebuffer2D, size : number) {
+    private GetSobelEdgeUniform() {
         return {
-            u_mainTex : texture,
-            u_texSize : [size, size],
+            u_mainTex : this._regl.prop<any, "u_mainTex">("u_mainTex"),
+            u_texSize : this._regl.prop<any, "u_texSize">("u_texSize"),
             u_kernel_x : this.GetSobelKernelX(),
             u_kernel_y : this.GetSobelKernelY()
         }

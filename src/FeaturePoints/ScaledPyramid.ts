@@ -2,6 +2,8 @@ import FrameBufferHelper from "../Shader/FrameBufferHelper";
 import ShaderManager from "../Shader/ShaderManager";
 import {ScalePyramidStruct} from "../FeaturePoints/DataStructure";
 import REGL, { DrawCommand, Framebuffer2D, Regl } from "regl";
+import {ProcessREGLCommand} from '../REGL/REGLCommands';
+import {FBO_SIZE} from '../REGL/RectShape';
 
 export default class ScaledPyramid {
     private _shaderManager : ShaderManager;
@@ -19,7 +21,8 @@ export default class ScaledPyramid {
     public get Pyramid() { return this._pyramid; }
 
     private _gaussianBlurCommand : DrawCommand;
-
+    private _sobelEdgeCommand : DrawCommand;
+    private _renderTexCommand : DrawCommand;
     constructor(shaderManager : ShaderManager, frameBuffers : FrameBufferHelper) {
         this._shaderManager = shaderManager;
         this._frameBuffers = frameBuffers;
@@ -31,14 +34,18 @@ export default class ScaledPyramid {
         this._originalSize = originalSize;
         this._aspectRatio = originalHeight / originalWidth;
 
-        this._layer = layer;        
+        this._layer = layer;
         this._octave = octave;
 
         this._pyramid = this.CreatePyramidStruct();
 
         let gaussianBlurConfig = this._shaderManager.GetGaussianBlurConfig(this._originalWidth, this._originalHeight);
 
-        this._gaussianBlurCommand = this._shaderManager.CreateActionCommand(gaussianBlurConfig, null);
+        this._gaussianBlurCommand = this._shaderManager.CreateActionCommand(gaussianBlurConfig);
+
+        this._sobelEdgeCommand = this._shaderManager.CreateActionCommand(this._shaderManager.GetSobelEdgeConfig());
+
+        this._renderTexCommand = this._shaderManager.CreateActionCommand(this._shaderManager.GetRenderConfig(this._pyramid[1].fbo));
     }
 
     public ProcessBlurPipeline(inputTexture : REGL.Texture) {
@@ -65,11 +72,15 @@ export default class ScaledPyramid {
                     drawFBO = p_layer.fbo;
                 }
 
-                drawFBO.use(function() {
-                    self._gaussianBlurCommand({u_mainTex : fboInputTex})
-                });
+                ProcessREGLCommand(drawFBO, self._gaussianBlurCommand, {u_mainTex : fboInputTex});
             }
+
+            ProcessREGLCommand(p_layer.sobel, self._sobelEdgeCommand, {u_mainTex : p_layer.fbo, u_texSize : [p_layer.width, p_layer.height]});
         }
+    }
+
+    public Preview() {
+        this._renderTexCommand();
     }
 
     private CreatePyramidStruct() {
@@ -77,17 +88,20 @@ export default class ScaledPyramid {
         let log2 = Math.log2(this._originalSize);
 
         for (let l = 0; l < this._layer; l++) {
-            let size = Math.round((Math.pow(2, (log2 - l))));
-            let scaleHeight =  Math.floor(size * this._aspectRatio);
+            let width = Math.round((Math.pow(2, (log2 - l))));
+            let height =  Math.floor(width * this._aspectRatio);
 
-            let cycleBuffer = this._frameBuffers.CreateCycleBuffer(size, scaleHeight, size, 2);
-            let fbo = this._frameBuffers.CreateFrameBuffer(size, scaleHeight, false, false);
+            let cycleBuffer = this._frameBuffers.CreateCycleBuffer(width, height, width, 2);
+            let mainFBO = this._frameBuffers.CreateFrameBuffer(width, height, false, false);
+            let sobelFBO = this._frameBuffers.CreateFrameBuffer(width, height, false, false);
 
             let pyramidStruct : ScalePyramidStruct = {
-                size : size,
+                width : width,
+                height : height,
                 octave : this._octave,
                 cycleBuffer : cycleBuffer,
-                fbo : fbo
+                fbo : mainFBO,
+                sobel: sobelFBO
             };
 
             pyramid.push(pyramidStruct);
