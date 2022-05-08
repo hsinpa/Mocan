@@ -15,6 +15,16 @@ export default class HarrisLaplace {
         this._scaledPyramid.Config(inputTexWidth, inputTexHeight, targetSize, 4, 4);
     }
     
-    
-    
+    ProcessScaleCornerDetection() {
+        let pyramids = this._scaledPyramid.Pyramid;
+        let pyramidLens = pyramids.length;
+        
+        for (let i = 0; i < pyramidLens; i++) {
+
+        }
+    }
+
+    ProcessCommand() {
+        
+    }    
 }

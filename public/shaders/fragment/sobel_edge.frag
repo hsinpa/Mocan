@@ -50,7 +50,6 @@ void main() {
     float dy = ProcessSobelOperation(u_kernel_y, v_uv);
    // sobelY = vec3(0.0,0.0,0.0);
     // vec3 finalColor = sobelX + sobelY;
-    
 
     gl_FragColor = vec4(dx*dx, dy*dy, dx*dy, 1.0);
 }
