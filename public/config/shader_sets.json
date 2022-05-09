@@ -27,6 +27,13 @@
                 "vertex_shader": "./shaders/vertex/basic_texture.vert",
                 "fragment_shader" : "./shaders/fragment/harris_corner.frag"    
             }
+        },
+        {
+            "name" : "PyramidCorner",
+            "glsl" : {
+                "vertex_shader": "./shaders/vertex/basic_texture.vert",
+                "fragment_shader" : "./shaders/fragment/pyramid_corner.frag"    
+            }
         }
     ]
 }

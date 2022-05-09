@@ -45,7 +45,7 @@ export default class WebAR extends WebglCanvas {
         this._inputTexture = await this._textureManager.GetREGLTexture("./texture/landscape_sample_01.jpg");
         this._harrisCorner.PrepareCommands(this._inputTexture);
 
-        this._harrisLaplaceCorner.Config(this.CanvasWidth, this.CanvasHeight, 1024);
+        this._harrisLaplaceCorner.Config(this.CanvasWidth, this.CanvasHeight, FBO_SIZE);
     }
 
     async Render() {

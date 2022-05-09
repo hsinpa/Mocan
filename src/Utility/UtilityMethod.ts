@@ -70,6 +70,10 @@ export function Clamp(value : number, min : number, max : number) {
     return Math.min(Math.max(value, min), max);
   };
   
+export function RescaleSize(width : number, height : number, target_width : number): IntVector2 {
+    let aspectRatio = height / width;
+    return {x : target_width, y :  Math.floor(aspectRatio * target_width)};
+}
 
 export function GetImagePromise(imagePath : string) {
     return new Promise<HTMLImageElement>( resolve => {

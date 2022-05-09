@@ -41,6 +41,10 @@ export default class ShaderManager {
         return this.GetMatConfig(Shaders.HarrisCorner, this.GetCornerUniform(blurFBO, sobelFBO, FBO_SIZE));
     }
 
+    public GetPyramidCornerConfig(width : number, height : number) {
+        return this.GetMatConfig(Shaders.PyramidCorner, this.GetPyramidCornerUniform(width, height));
+    }
+
     public GetRenderConfig(input : Framebuffer2D) {        
         return this.GetMatConfig(Shaders.RenderTexture, {u_mainTex : input});
     }
@@ -73,6 +77,16 @@ export default class ShaderManager {
             u_texSize : this._regl.prop<any, "u_texSize">("u_texSize"),
             u_kernel_x : this.GetSobelKernelX(),
             u_kernel_y : this.GetSobelKernelY()
+        }
+    }
+
+    private GetPyramidCornerUniform(width : number, height : number) {
+        return {
+            u_mainTex : this._regl.prop<any, "u_mainTex">("u_mainTex"),
+            u_texSize : [width, height],
+
+            u_pyramidScaleTex : this._regl.prop<any, "u_pyramidScaleTex">("u_pyramidScaleTex"),
+            u_pyramidScaleSize : this._regl.prop<any, "u_pyramidScaleSize">("u_pyramidScaleSize"),
         }
     }
 
